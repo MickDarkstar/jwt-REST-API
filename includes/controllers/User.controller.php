@@ -1,17 +1,30 @@
 <?php
 class UserController extends BaseController
 {
+    function __construct()
+    {
+        parent::__construct();
+    }
+
     public static function AllUsers()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $service = new UserService();
-            $result = $service->all();
-            echo $result;
-            http_response_code(200);
-        } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            echo 'POST';
-        } else {
-            http_response_code(405);
-        }
+        $service = new UserService();
+        $result = $service->all();
+        echo json_encode(
+            array(
+                "message" => "All users",
+                "data" => $result
+            )
+        );
+    }
+
+    public static function SaveUser()
+    {
+        echo json_encode(
+            array(
+                "message" => "Saved user",
+                "data" => null
+            )
+        );
     }
 }

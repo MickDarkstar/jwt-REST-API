@@ -14,9 +14,9 @@ class UserService
 	const Username = 'username';
 	const LoggedInFlag = 'user_is_logged_in';
 	/**
-	 * @param AppUser $currentUser
+	 * @param UserRepository $repository
 	 */
-	public function __construct(UserRepository $repository = null)
+	function __construct(UserRepository $repository = null)
 	{
 		if ($repository == null)
 			$repository = new UserRepository();
@@ -30,8 +30,7 @@ class UserService
 	public function all()
 	{ 
 		$users = $this->repository->all();
-		$jsonResult = json_encode($users);
-		return $jsonResult;
+		return $users;
 	}
 	//public static function saltPassword($user, $pass)
 	//{
