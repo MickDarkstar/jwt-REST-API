@@ -3,16 +3,13 @@
 /**
  * UserService for login user in session, checking if user is authenticated and to get an instance of current user as AppUser
  *
- * @version 1.0
+ * @version 2.0
  * @author Mick
  */
 class UserService
 {
 	private $repository;
 
-	const Userid = 'userid';
-	const Username = 'username';
-	const LoggedInFlag = 'user_is_logged_in';
 	/**
 	 * @param UserRepository $repository
 	 */
@@ -25,13 +22,26 @@ class UserService
 	}
 
 	/**
-	 * @return AppUser[] json_encoded
+	 * @return AppUser[]
 	 */
 	public function all()
 	{ 
-		$users = $this->repository->all();
-		return $users;
+		return $this->repository->all();
 	}
+
+	public function emailExists(string $email)
+    {
+        return $this->repository->emailExists($email);
+	}
+	
+	public function getByEmail(string $email)
+    {
+        return $this->repository->getByEmail($email);
+    }
+
+	// Allt här under kan tas bort
+
+
 	//public static function saltPassword($user, $pass)
 	//{
 	//    $user_salt = sha1($user);

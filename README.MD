@@ -1,3 +1,10 @@
+json för test av middleware auth:
+{
+	"firstname": "Micke",
+	"lastname": "Fehrm",
+	"email": "micke@tempory.org",
+	"password": "test2"
+}
 *** Arkitektur ***
 --Konstanter läggs i /includes/Constants.php
 

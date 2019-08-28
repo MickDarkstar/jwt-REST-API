@@ -22,5 +22,9 @@ Route::set('users', function () {
 });
 
 Route::set('login', function () {
-    echo 'login page';
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        UserController::Login();
+    } else {
+        http_response_code(405);
+    }
 });

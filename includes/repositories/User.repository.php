@@ -76,6 +76,45 @@ class UserRepository extends BaseRepository
         return ($result > 0);
     }
 
+    public function emailExists($email)
+    {
+        $query = "SELECT id, firstname, lastname, password
+                    FROM " . self::DB_TABLE . "
+                    WHERE email = ?
+                    LIMIT 0,1";
+
+        $stmt = $this->db->prepare($query);
+        $email = htmlspecialchars(strip_tags($email));
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        if ($num > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getByEmail($email)
+    {
+        $query = "SELECT id, firstname, lastname, password
+                    FROM `" . self::DB_TABLE . "`
+                    WHERE email = ?
+                    LIMIT 0,1";
+
+        $stmt = $this->db->prepare($query);
+        $email = htmlspecialchars(strip_tags($email));
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return new AppUser(
+            $row['id'],
+            $row['firstname'],
+            $row['lastname'],
+            $email,
+            $row['password']
+        );
+    }
+
     public function find($id)
     {
         $id = intval($id);

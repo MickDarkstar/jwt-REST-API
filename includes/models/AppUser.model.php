@@ -2,7 +2,7 @@
 
 class AppUser
 {
-    private $id;
+    public $id;
     public $firstname;
     public $lastname;
 	public $email;
