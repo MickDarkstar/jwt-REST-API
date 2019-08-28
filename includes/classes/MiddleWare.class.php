@@ -40,12 +40,8 @@ class MiddleWare
             );
             // login failed
         } else {
-
-            // set response code
-            http_response_code(401);
-
             // tell the user login failed
-            echo json_encode(array("message" => "Login failed. Wrong password"));
+            Response::AccessDenied("Login failed. Wrong password");
         }
     }
 
@@ -53,8 +49,7 @@ class MiddleWare
     {
         $headers = apache_request_headers();
         if (isset($headers['Authorization']) == false) {
-            http_response_code(401);
-            echo json_encode(array("message" => "Access denied. Auth-header missing"));
+            Response::AccessDenied("Login failed. Wrong password");
             exit;
         }
         $TOKEN = $headers['Authorization'];
@@ -69,8 +64,7 @@ class MiddleWare
                 ));
             }
         } else {
-            http_response_code(401);
-            echo json_encode(array("message" => "Access denied."));
+            Response::AccessDenied("Login failed. Wrong password");
             exit;
         }
     }
@@ -81,10 +75,6 @@ class MiddleWare
     public static function DecodeToken()
     {
         $decoded = self::Authorize();
-        http_response_code(200);
-        echo json_encode(array(
-            "message" => "Access granted.",
-            "data" => $decoded->data
-        ));
+        Response::OK($decoded->data, "Access granted.");
     }
 }
