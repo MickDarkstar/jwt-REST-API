@@ -17,7 +17,7 @@ Route::set('users', function () {
     } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         UserController::SaveUser();
     } else {
-        Response::MethodNotAllowed("Method is not allowed");
+        Response::MethodNotAllowed();
     }
 });
 
@@ -25,6 +25,6 @@ Route::set('login', function () {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         UserController::Login();
     } else {
-        http_response_code(405);
+        Response::MethodNotAllowed();
     }
 });

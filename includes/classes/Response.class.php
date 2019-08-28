@@ -8,16 +8,13 @@ class Response
         self::Return($message, $data);
     }
 
-    public static function AccessDenied($message = null, $data)
+    public static function AccessDenied($message = "Access denied.", $data)
     {
-        if(isset($message) === false) {
-            $message = "Access denied.";
-        }
         self::Status(401);
         self::Return($message);
     }
 
-    public static function MethodNotAllowed($message = null)
+    public static function MethodNotAllowed($message = "Method is not allowed")
     {
         self::Status(405);
         self::Return($message);
