@@ -57,11 +57,7 @@ class MiddleWare
             try {
                 return JWT::decode($TOKEN, SECRET_KEY, array('HS256'));
             } catch (Exception $e) {
-                http_response_code(401);
-                echo json_encode(array(
-                    "message" => "Access denied. Invalid access-token",
-                    "error" => $e->getMessage()
-                ));
+                Response::AccessDenied("Access denied. Invalid token", $e->getMessage());
             }
         } else {
             Response::AccessDenied("Login failed. Wrong password");
