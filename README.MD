@@ -19,7 +19,7 @@ PHP Boilerplate REST-API with jwt token authentication
 
 -- *Klasser och funktioner*:
 https://www.sitepoint.com/community/t/to-static-or-not-to-static/263096
-Då testbarhet inte finns på kartan och är det okej med statiska metoder och egenskaper, så länge de inte håller "state" dvs de måste vara stateless
+Då testbarhet inte finns på kartan så är det okej med statiska metoder och egenskaper, så länge de är stateless
 
 *** Namnkonventioner ***
 !!Måste följas om inte autloader önskas skrivas om!!
