@@ -1,4 +1,5 @@
-#jwt-REST-API
+# jwt-REST-API
+PHP Boilerplate REST-API with jwt token authentication 
 
 *** Arkitektur ***
 -- OOP och multitier architecture (fyra lager där middleware användas före och efter lager beroende på syfte)
