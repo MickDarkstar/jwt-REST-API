@@ -45,11 +45,14 @@ class MiddleWare
         }
     }
 
+    /**
+     * If user is not authorized then a response is sent to client and code execution stops 
+     */
     public static function Authorize()
     {
         $headers = apache_request_headers();
         if (isset($headers['Authorization']) == false) {
-            Response::AccessDenied("Login failed. Wrong password");
+            Response::AccessDenied("Login failed. Header not set");
             exit;
         }
         $TOKEN = $headers['Authorization'];

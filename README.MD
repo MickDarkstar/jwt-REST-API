@@ -6,7 +6,10 @@ json för test av middleware auth:
 	"password": "test2"
 }
 *** Arkitektur ***
---Konstanter läggs i /includes/Constants.php
+-- OOP och multitier architecture (fyra lager där middleware användas före och efter lager beroende på syfte)
+-- *Konstanter*: läggs i /includes/Constants.php, MiddleWare har dock en constant i MiddleWare.settings.php som bör ses över.
+
+-- *MiddleWare*: Mellanlager som används före anrop för authentisering och verifiering av användare. Används för och efter anrop beroende på case. 
 
 -- *Basklasser*: Basklasser finns för nästan alla typer av klasser och skall populeras med återanvändbar kod för att följa DRY-principen
 
@@ -17,6 +20,10 @@ json för test av middleware auth:
 -- *Kontrollers* Anropar servicar för att hämta och manipulera data, kontrollers och deras funktioner anropas i de routes som sätts upp i "routes/Routes.php" 
 
 -- *index.php* inkluderas det minimalt nödvändiga för att appen skall fungera. T.ex autoloader.php och Routes.php. I framtiden skall själva appen abstraheras bort i en egen klass för att ännu mer kunna återanvända denna boilerplate utan att knyta den till någon specifik lösning.
+
+-- *Klasser och funktioner*:
+https://www.sitepoint.com/community/t/to-static-or-not-to-static/263096
+Då testbarhet inte finns på kartan och är det okej med statiska metoder och egenskaper, så länge de inte håller "state" dvs de måste vara stateless
 
 *** Namnkonventioner ***
 !!Måste följas om inte autloader önskas skrivas om!!

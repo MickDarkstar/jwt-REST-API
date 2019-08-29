@@ -13,6 +13,7 @@ Route::set('index.php', function () {
 Route::set('users', function () {
     MiddleWare::Authorize();
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        UserController::init();
         UserController::AllUsers();
     } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         UserController::SaveUser();
@@ -23,6 +24,7 @@ Route::set('users', function () {
 
 Route::set('login', function () {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        UserController::init();
         UserController::Login();
     } else {
         Response::MethodNotAllowed();

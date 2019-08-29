@@ -6,7 +6,7 @@
  * @version 2.0
  * @author Mick
  */
-class UserService
+final class UserService
 {
 	private $repository;
 

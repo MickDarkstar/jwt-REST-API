@@ -5,7 +5,7 @@
  * @version 2.0
  * @author Micke@tempory.org
  */
-class UserRepository extends BaseRepository
+final class UserRepository extends BaseRepository
 {
     const DB_TABLE = "users";
 
