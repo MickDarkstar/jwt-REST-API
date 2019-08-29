@@ -1,45 +1,71 @@
 <?php
 final class UserController extends BaseController
 {
-    private static $init = false;
-    private static $service;
+    private $service;
 
     public function __construct()
     {
         parent::__construct();
+        $this->service = new UserService();
     }
 
-    public static function init() 
-	{
-		if (!self::$init) {
-            self::$service = new UserService();
-			self::$init = true; 
-		}
+    public static function New()
+    {
+        return new self;
     }
-    
-    public static function Login()
+
+    public function Login()
     {
         $data = json_decode(file_get_contents("php://input"));
-        $emailExists = self::$service->emailExists($data->email);
+
+        $emailExists = $this->service->emailExists($data->email);
         if ($emailExists) {
-            $user = self::$service->getByEmail($data->email);
+            $user = $this->service->getByEmail($data->email);
             MiddleWare::VerifyPassword($data, $user);
         } else {
             Response::AccessDenied("Unsuccessful login: E-mail does not exist");
         }
     }
 
-
-    public static function AllUsers()
+    public function AllUsers()
     {
-        $result = self::$service->all();
+        $result = $this->service->all();
         Response::Ok($result, "All users");
     }
 
-    public static function SaveUser()
+    public function NewUser()
     {
-        // $result = self::createUser();
-        // $result = self::update();
-        Response::Ok(null, "Saved user");
+        $data = json_decode(file_get_contents("php://input"));
+        $user = new AppUser(
+            0,
+            $data->firstname,
+            $data->lastname,
+            $data->email,
+            $data->password
+        );
+        if ($this->service->emailExists($user->email)) {
+            Response::Warning("E-mail is already in use");
+        } else {
+            $result = $this->service->create($user);
+            Response::Ok($result, "Profile created");
+        }
+    }
+
+    public function UpdateUserinfo()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $user = new UpdateUserinfo(
+            $data->id,
+            $data->firstname,
+            $data->lastname,
+            $data->email
+        );
+        $foundUser = $this->service->find($user->id);
+        if ($this->service->emailExists($user->email) && $user->email !== $foundUser->email) {
+            Response::Warning("E-mail is already in use");
+        } else {
+            $result = $this->service->update($user);
+            Response::Ok($result, "Updated profile info");
+        }
     }
 }

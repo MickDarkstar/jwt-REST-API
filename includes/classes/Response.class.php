@@ -8,6 +8,18 @@ class Response
         self::Return($message, $data);
     }
 
+    public static function Created($data, $message = null)
+    {
+        self::Status(201);
+        self::Return($message, $data);
+    }
+
+    public static function Warning($message = "Invalid data")
+    {
+        self::Status(400);
+        self::Return($message);
+    }
+
     public static function AccessDenied($message = "Access denied.", $data)
     {
         self::Status(401);

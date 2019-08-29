@@ -33,49 +33,10 @@ final class UserRepository extends BaseRepository
     }
 
     /**
-     * @param $username
-     * @param $userpassword
-     * @return AppUser|null
-     */
-    public function getByUsernameAndUserpassword($username, $userpassword)
-    {
-        $req = $this->db->prepare("SELECT * FROM `" . self::DB_TABLE . "` WHERE name = :username AND password = :userpassword");
-        $req->bindParam(':username', $username, PDO::PARAM_STR);
-        $req->bindParam(':userpassword', $userpassword, PDO::PARAM_STR);
-        $req->execute();
-        $result = $req->fetch();
-
-        return self::mapToObject($result);
-    }
-
-    /**
-     * Returns true if username is in use
-     * @param string $useremail
+     * Returns true if email is in use
+     * @param string $email
      * @return boolean
      */
-    public function usernameExists($username)
-    {
-        $req = $this->db->prepare("SELECT * FROM `" . self::DB_TABLE . "` WHERE name = :username");
-        $req->bindParam(':username', $username, PDO::PARAM_STR);
-        $req->execute();
-        $result = $req->fetch();
-        return ($result > 0);
-    }
-
-    /**
-     * Returns true if useremail is in use
-     * @param string $useremail
-     * @return boolean
-     */
-    public function useremailExists($useremail)
-    {
-        $req = $this->db->prepare("SELECT * FROM `" . self::DB_TABLE . "` WHERE email = :useremail");
-        $req->bindParam(':useremail', $useremail, PDO::PARAM_STR);
-        $req->execute();
-        $result = $req->fetch();
-        return ($result > 0);
-    }
-
     public function emailExists($email)
     {
         $query = "SELECT id, firstname, lastname, password
@@ -94,6 +55,11 @@ final class UserRepository extends BaseRepository
         return false;
     }
 
+    /**
+     * Returns AppUser by email
+     * @param string $email
+     * @return AppUser
+     */
     public function getByEmail($email)
     {
         $query = "SELECT id, firstname, lastname, password
@@ -115,6 +81,11 @@ final class UserRepository extends BaseRepository
         );
     }
 
+    /**
+     * Returns AppUser by id
+     * @param int $id
+     * @return AppUser
+     */
     public function find($id)
     {
         $id = intval($id);
@@ -125,13 +96,20 @@ final class UserRepository extends BaseRepository
         return self::mapToObject($result);
     }
 
-    public function create(AppUser $user)
+    /**
+     * Saves a new AppUser in database and return is on success
+     * @param AppUser $user
+     * @return AppUser
+     */
+    public function create(CreateUser $user)
     {
-        $req = $this->db->prepare("INSERT INTO `" . self::DB_TABLE . "`(name, password, email, created_date)VALUES(:name, :password, :email, :created_date)");
-        $req->bindParam(':name', $user->name, PDO::PARAM_STR);
-        $req->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
+        $now = date("Y-m-d");
+        $req = $this->db->prepare("INSERT INTO `" . self::DB_TABLE . "`(firstname, lastname, password, email, created) VALUES(:firstname, :lastname, :password, :email, :created)");
+        $req->bindParam(':firstname', $user->firstname, PDO::PARAM_STR);
+        $req->bindParam(':lastname', $user->lastname, PDO::PARAM_STR);
+        $req->bindParam(':password', $user->password);
         $req->bindParam(':email', $user->email, PDO::PARAM_STR);
-        $req->bindParam(':created_date', date("Y-m-d"), PDO::PARAM_STR);
+        $req->bindParam(':created', $now, PDO::PARAM_STR);
 
         if ($req->execute() == false) {
             return false;
@@ -140,16 +118,25 @@ final class UserRepository extends BaseRepository
         return self::find($this->db->lastInsertId());
     }
 
-    public function update($id, $name, $email, $password)
+    /**
+     * Saves an existing AppUser in database and return is on success
+     * @param AppUser $user
+     */
+    public function update(UpdateUserinfo $user)
     {
-        $req = $this->db->prepare("UPDATE `" . self::DB_TABLE . "` SET name=:name, password=:password, email=:email WHERE :id=id");
-        $req->bindParam(':id', $id, PDO::PARAM_INT);
-        $req->bindParam(':name', $name, PDO::PARAM_STR);
-        $req->bindParam(':email', $name, PDO::PARAM_STR);
-        $req->bindParam(':password', $password, PDO::PARAM_STR);
+        $req = $this->db->prepare("UPDATE `" . self::DB_TABLE . "` SET firstname=:firstname, lastname=:lastname, email=:email WHERE :id=id");
+        $req->bindParam(':id', $user->id, PDO::PARAM_INT);
+        $req->bindParam(':firstname', $user->firstname, PDO::PARAM_STR);
+        $req->bindParam(':lastname', $user->lastname, PDO::PARAM_STR);
+        $req->bindParam(':email', $user->email, PDO::PARAM_STR);
         $req->execute();
     }
 
+    /**
+     * Maps data from current table to an object
+     * @param array[] $result
+     * @return AppUser $user
+     */
     private function mapToObject($result)
     {
         return new AppUser(

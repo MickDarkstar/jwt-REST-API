@@ -1,5 +1,5 @@
 <?php
-class IndexController extends BaseController
+final class IndexController extends BaseController
 {
     public static function Home()
     {
