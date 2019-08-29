@@ -10,6 +10,7 @@ use \Firebase\JWT\JWT;
  */
 class MiddleWare
 {
+
     public static function VerifyPassword($data, AppUser $user)
     {
         if (password_verify($data->password, $user->password)) {
@@ -25,23 +26,17 @@ class MiddleWare
                     "email" => $user->email
                 )
             );
-
-            // set response code
-            http_response_code(200);
-
-            // generate jwt
             $jwt = JWT::encode($token, SECRET_KEY);
-            echo json_encode(
+            return MiddleWareMessage::Get(
+                200,
+                "Access granted",
                 array(
-                    "message" => "Successful login.",
                     "jwt" => $jwt,
                     "expiresIn" => nbf
                 )
             );
-            // login failed
         } else {
-            // tell the user login failed
-            Response::AccessDenied("Login failed. Wrong password");
+            return MiddleWareMessage::Get(401, "Login failed. Wrong password", "datta");
         }
     }
 
@@ -52,19 +47,19 @@ class MiddleWare
     {
         $headers = apache_request_headers();
         if (isset($headers['Authorization']) == false) {
-            Response::AccessDenied("Login failed. Header not set");
+            return MiddleWareMessage::Get(401, "Login failed. Header not set");
             exit;
         }
         $TOKEN = $headers['Authorization'];
         if ($TOKEN) {
             try {
-                return JWT::decode($TOKEN, SECRET_KEY, array('HS256'));
+                $token = JWT::decode($TOKEN, SECRET_KEY, array('HS256'));
+                return MiddleWareMessage::Get(200, "Access granted", $token);
             } catch (Exception $e) {
-                Response::AccessDenied("Access denied. Invalid token", $e->getMessage());
+                return MiddleWareMessage::Get(401, "Access denied. Invalid token", $e->getMessage());
             }
         } else {
-            Response::AccessDenied("Login failed. Wrong password");
-            exit;
+            return MiddleWareMessage::Get(401, "Login failed. Wrong password");
         }
     }
     /**
@@ -74,6 +69,6 @@ class MiddleWare
     public static function DecodeToken()
     {
         $decoded = self::Authorize();
-        Response::OK($decoded->data, "Access granted.");
+        return MiddleWareMessage::Get(401, "Access granted.", $decoded->data);
     }
 }

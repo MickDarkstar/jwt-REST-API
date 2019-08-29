@@ -1,41 +1,41 @@
 <?php
-//** Mostly for syntax sugar and less code */
+//** Used as standard-response for all requests */
 class Response
 {
-    public static function OK($data, $message = null)
+    public static function OK($message = null, $data = null)
     {
         self::Status(200);
-        self::Return($message, $data);
+        return self::Return($message, $data);
     }
 
-    public static function Created($data, $message = null)
+    public static function Created($message = null, $data)
     {
         self::Status(201);
-        self::Return($message, $data);
+        return self::Return($message, $data);
     }
 
     public static function Warning($message = "Invalid data")
     {
         self::Status(400);
-        self::Return($message);
+        return self::Return($message);
     }
 
-    public static function AccessDenied($message = "Access denied.", $data)
+    public static function AccessDenied($message = "Access denied.")
     {
         self::Status(401);
-        self::Return($message);
+        return self::Return($message);
     }
 
     public static function MethodNotAllowed($message = "Method is not allowed")
     {
         self::Status(405);
-        self::Return($message);
+        return self::Return($message);
     }
 
     public static function InternalServerError($message = null)
     {
         self::Status(500);
-        self::Return($message);
+        return self::Return($message);
     }
 
     private static function Status($code)
@@ -50,7 +50,7 @@ class Response
             "data" => $data
         );
 
-        echo json_encode(
+        return json_encode(
             $array
         );
     }

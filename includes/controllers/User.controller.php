@@ -16,44 +16,53 @@ final class UserController extends BaseController
 
     public function Login()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        $data = parent::HttpRequestInput();
 
         $emailExists = $this->service->emailExists($data->email);
         if ($emailExists) {
             $user = $this->service->getByEmail($data->email);
-            MiddleWare::VerifyPassword($data, $user);
+            $response = MiddleWare::VerifyPassword($data, $user);
+            if ($response::$statusCode === 200) {
+                echo Response::Ok($response::$message, $response::$data);
+            } else {
+                echo Response::AccessDenied($response::$message);
+            }
         } else {
-            Response::AccessDenied("Unsuccessful login: E-mail does not exist");
+            echo Response::AccessDenied("Unsuccessful login: E-mail does not exist");
         }
     }
 
     public function AllUsers()
     {
+        parent::Authorize();
+
         $result = $this->service->all();
-        Response::Ok($result, "All users");
+        echo Response::Ok("All users", $result);
     }
 
     public function NewUser()
     {
-        $data = json_decode(file_get_contents("php://input"));
-        $user = new AppUser(
-            0,
+        $data = parent::HttpRequestInput();
+
+        $user = new CreateUser(
             $data->firstname,
             $data->lastname,
             $data->email,
             $data->password
         );
         if ($this->service->emailExists($user->email)) {
-            Response::Warning("E-mail is already in use");
+            echo Response::Warning("E-mail is already in use");
         } else {
             $result = $this->service->create($user);
-            Response::Ok($result, "Profile created");
+            echo Response::Created("Profile created", $result);
         }
     }
 
     public function UpdateUserinfo()
     {
-        $data = json_decode(file_get_contents("php://input"));
+        parent::Authorize();
+
+        $data = parent::HttpRequestInput();
         $user = new UpdateUserinfo(
             $data->id,
             $data->firstname,
@@ -62,10 +71,10 @@ final class UserController extends BaseController
         );
         $foundUser = $this->service->find($user->id);
         if ($this->service->emailExists($user->email) && $user->email !== $foundUser->email) {
-            Response::Warning("E-mail is already in use");
+            echo Response::Warning("E-mail is already in use");
         } else {
             $result = $this->service->update($user);
-            Response::Ok($result, "Updated profile info");
+            echo Response::Ok("Updated profile info", $result);
         }
     }
 }

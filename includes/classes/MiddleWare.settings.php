@@ -4,7 +4,6 @@
 define('SECRET_KEY', 'example_key');
 
 
-
 // The rest is called the registered claim names. 
 // The iss (issuer) claim identifies the principal that issued the JWT.
 $iss = "http://example.org";
