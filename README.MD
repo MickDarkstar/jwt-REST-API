@@ -1,10 +1,5 @@
-json för test av middleware auth:
-{
-	"firstname": "Micke",
-	"lastname": "Fehrm",
-	"email": "micke@tempory.org",
-	"password": "test2"
-}
+#jwt-REST-API
+
 *** Arkitektur ***
 -- OOP och multitier architecture (fyra lager där middleware användas före och efter lager beroende på syfte)
 -- *Konstanter*: läggs i /includes/Constants.php, MiddleWare har dock en constant i MiddleWare.settings.php som bör ses över.
