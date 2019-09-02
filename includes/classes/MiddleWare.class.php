@@ -47,7 +47,7 @@ class MiddleWare
     {
         $headers = apache_request_headers();
         if (isset($headers['Authorization']) == false) {
-            return MiddleWareMessage::Get(401, "Login failed. Header not set");
+            return MiddleWareMessage::Get(401, "Access denied. Header not set");
             exit;
         }
         $TOKEN = $headers['Authorization'];
@@ -59,7 +59,7 @@ class MiddleWare
                 return MiddleWareMessage::Get(401, "Access denied. Invalid token", $e->getMessage());
             }
         } else {
-            return MiddleWareMessage::Get(401, "Login failed. Wrong password");
+            return MiddleWareMessage::Get(401, "Access denied. Token not set.");
         }
     }
     /**
