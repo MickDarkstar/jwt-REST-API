@@ -32,7 +32,10 @@ class MiddleWare
                 "Access granted",
                 array(
                     "jwt" => $jwt,
-                    "expiresIn" => nbf
+                    "expiresIn" => nbf,
+                    "firstname" => $user->firstname,
+                    "lastname" => $user->lastname,
+                    "email" => $user->email
                 )
             );
         } else {

@@ -40,7 +40,9 @@ Route::set('login', function () {
         case 'POST':
             $controller->Login();
             break;
-
+        case 'OPTIONS':
+            echo Response::OK("Preflight OK för fan!");
+            break;
         default:
             echo Response::MethodNotAllowed();
             break;
