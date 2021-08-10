@@ -8,7 +8,7 @@ class Response
         return self::Return($message, $data);
     }
 
-    public static function Created($message = null, $data)
+    public static function Created($message = null, $data = null)
     {
         self::Status(201);
         return self::Return($message, $data);
